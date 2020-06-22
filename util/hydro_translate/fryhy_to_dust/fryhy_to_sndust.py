@@ -76,6 +76,7 @@ def convert_record(data):
 	''' for correctly loading Fortran binaries data (special record heades/footers)'''
 
 	nc, time = struct.unpack('=id', data[4:16])
+	time = time*utim
 
 	start = hsize
 	siz = 8 * nc
@@ -84,19 +85,25 @@ def convert_record(data):
 	formp1 = '={0}d'.format(nc+1)
 
 	x = urad * np.asarray(struct.unpack(formp1, data[start:start + sizp1]))
+	
 	start += sizp1
 	v = uvel * np.asarray(struct.unpack(formp1, data[start:start + sizp1]))
 	# skip q, dq
+	
 	start += 3 * siz
 	u = ueng * np.asarray(struct.unpack(form, data[start:start + siz]))
+	
 	start += siz
 	deltam = umas * np.asarray(struct.unpack(form, data[start:start + siz]))
 	# skip abar
+	
 	start += 2 * siz
 	rho = uden * np.asarray(struct.unpack(form, data[start:start + siz]))
+	
 	start += siz
 	temp = utmp * np.asarray(struct.unpack(form, data[start:start + siz]))
 	# skip tempe, ye
+	
 	start += 3 * siz
 	pr = uprs * np.asarray(struct.unpack(form, data[start:start + siz]))
 
