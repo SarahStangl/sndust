@@ -89,16 +89,21 @@ if __name__ == "__main__":
 
     model_id = 2 # note, zone ids from 0 ... 1545
     zone_ids = np.arange(0, 100) # TODO: use particle data to get all zone numbers
+    
+    restart = settings["restart"]
+    if restart:
+        zone_ids = settings["res_zones"]
+        
     if 0:
         # TODO: better schedualing
         with MPIPoolExecutor(max_workers=args.ncpu) as pool:
             for result in pool.map(duster, it.repeat(settings), it.repeat(model_id), zone_ids):
                 print(result)
     else:
-        res_msg = duster(settings, model_id, 200)
-        print(res_msg)
-        # for iz in zone_ids:
-        #     duster(settings, model_id, iz)
+        #res_msg = duster(settings, model_id, 200)
+        #print(res_msg)
+        for iz in zone_ids:
+            duster(settings, model_id, iz)
 
     print("done")
 
