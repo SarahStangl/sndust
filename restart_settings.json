@@ -13,5 +13,5 @@
   "align_tend_value"  : 31556926,
   "align_tend_resolution": 1,
   "restart"              : "True",
-  "res_zones"            : "[1450]"
+  "res_zones"            : [1450,1451]
 }
