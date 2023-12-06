@@ -51,8 +51,8 @@ class Observer(object):
             ("x", np.float64),
             *[ (f"N_{s}", np.float64) for s in self._net._species_gas ],
             *[ (f"M_{s}", np.float64, (N_MOMENTS,)) for s in self._net._species_dust ],
-            *[ (f"calc_{s}", dust_calc) for s in self._net._species_dust ],
-            *[ (f"sizeBin_{s}", np.float64, (numBins,)) for s in self._net._species_dust ] # trying to add size bins to int
+            *[ (f"calc_{s}", dust_calc) for s in self._net._species_dust ]###,
+            ###*[ (f"sizeBin_{s}", np.float64, (numBins,)) for s in self._net._species_dust ] # trying to add size bins to int
         ])
 
         self._store_chunk = rt_settings["write_hdf5_every"] // rt_settings["store_hdf5_every"]
@@ -94,7 +94,7 @@ class Observer(object):
             _sidx = self._net._NG + len(self._net._species_dust) * N_MOMENTS + i * numBins
             frame[f"M_{s}"] = self._ode.y[_didx : _didx + N_MOMENTS]
             frame[f"calc_{s}"] = self._step._dust_calc[i]
-            frame[f"sizeBin_{s}"] = self._ode.y[_sidx : _sidx + numBins] # trying to add size bins to int
+            ####frame[f"sizeBin_{s}"] = self._ode.y[_sidx : _sidx + numBins] # trying to add size bins to int
         return frame
 
     def _store_h5dat(self, frame):
@@ -134,9 +134,9 @@ class Observer(object):
                 _moms = ", ".join([ f"M_{i}[{m: >6.5E}]" for i, m in enumerate(frame[_mkey]) ])
                 blob += f"{species}: lnS[ {frame[_ckey]['lnS']: >6.5E} ] J[ {frame[_ckey]['Js']: >6.5E} ]\n"
                 blob += f"++++ moments ++++ {_moms}\n"
-                _skey = f"sizeBin_{species}" # trying to add size bins to int
-                _sizes = ", ".join([ f"sizeBin_{i}[{m: >6.5E}]" for i, m in enumerate(frame[_skey]) ]) # trying to add size bins to int
-                blob += f"+++ size bins +++ {_sizes}\n" # trying to add size bins to int
+                ###_skey = f"sizeBin_{species}" # trying to add size bins to int
+                ###_sizes = ", ".join([ f"sizeBin_{i}[{m: >6.5E}]" for i, m in enumerate(frame[_skey]) ]) # trying to add size bins to int
+                ####blob += f"+++ size bins +++ {_sizes}\n" # trying to add size bins to int
         return blob
 
     def _solution_short(self, frame):
@@ -171,9 +171,9 @@ class Observer(object):
                     with open(self._histfname, "a") as histf:
                         print(self._long_header(frame) + self._solution_all(frame), file=histf)
                 elif action == "screen_short":
-                    print(self._short_header(frame) + self._solution_short(frame))
+                    print(self._long_header(frame) + self._solution_all(frame)) #print(self._short_header(frame) + self._solution_short(frame))
                 elif action == "screen_all":
-                    pass
+                    pass #print(self._long_header(frame) + self._solution_all(frame))
                 else:
                     raise ValueError(f"{action} is not understood trigger")
 
