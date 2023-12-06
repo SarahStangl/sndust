@@ -12,6 +12,8 @@ from network import Network
 from stepper import Stepper
 from solver import SolverSpec, Solver
 from observer import Observer
+import h5py as h
+#import timeit # for timing purposes
 
 ONLY_MODEL_2 = True
 #np.seterr(invalid='raise')
@@ -88,7 +90,13 @@ if __name__ == "__main__":
         settings = json.load(jfs)
 
     model_id = 2 # note, zone ids from 0 ... 1545
-    zone_ids = np.arange(0, 100) # TODO: use particle data to get all zone numbers
+    Ncells = 1542 # TODO: use particle data to get all zone numbers 
+    zone_ids = np.arange(0, Ncells) # TODO: use particle data to get all zone numbers
+    restart = settings["restart"]
+
+    if restart:
+        zone_ids = settings["res_zones"]
+    
     if 0:
         # TODO: better schedualing
         with MPIPoolExecutor(max_workers=args.ncpu) as pool:
